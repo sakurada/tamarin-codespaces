@@ -11,6 +11,5 @@
       "label": "Tamarin GUI",
       "onAutoForward": "openBrowser"
     }
-  },
-  "postCreateCommand": "bash .devcontainer/post-create.sh"
+  }
 }

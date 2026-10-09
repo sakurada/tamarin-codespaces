@@ -7,15 +7,28 @@
 
 | ファイル | 内容 |
 | --- | --- |
-| `.devcontainer/Dockerfile` | Ubuntu 24.04 + Tamarin 1.12.0 + Maude 3.5.1 + Graphviz |
+| `.devcontainer/Dockerfile` | Debian 13 (trixie) + Tamarin 1.12.0 + Maude 3.4 + Graphviz（amd64 / arm64 対応） |
 | `.devcontainer/devcontainer.json` | Codespaces の設定（ポート 3001 を転送） |
-| `.devcontainer/post-create.sh` | 作成時に `tamarin_toy_protocol` を clone し、`tamarin-prover test` を実行 |
 
 ## 使い方
 
 1. このリポジトリの画面で **Code → Codespaces → Create codespace on main**
 2. 初回はコンテナのビルドに数分かかります
 3. 起動後、ターミナルで以下のコマンドを実行します
+
+### インストールの確認
+
+```bash
+tamarin-prover test
+```
+
+最後に `All tests successful.` と表示されれば OK です。
+
+### 演習用スクリプトの取得
+
+```bash
+git clone https://github.com/benjaminkiesl/tamarin_toy_protocol.git
+```
 
 ### コマンドラインで証明
 
@@ -43,8 +56,16 @@ tamarin-prover interactive --interface='*4' tamarin_toy_protocol
 （開かない場合は VS Code の「ポート」タブから 3001 の地球アイコンをクリック）。
 終了は `Ctrl+C` です。
 
+## 手元の Mac / Windows で使う場合
+
+Docker Desktop と VS Code の [Dev Containers 拡張](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) があれば、
+このリポジトリを clone して VS Code で開き、**Reopen in Container** を選ぶと同じ環境が使えます。
+Intel / AMD (x86_64) と Apple Silicon (arm64) のどちらでもネイティブに動きます。
+
 ## 補足
 
-- Ubuntu の apt で入る Maude 3.2 は Tamarin が非対応のため、Maude 公式リリースのバイナリを使っています。
-- バージョンは `Dockerfile` の `TAMARIN_VERSION` / `MAUDE_VERSION` で変更できます。
-- `tamarin_toy_protocol/` は Codespace 作成時に clone するため `.gitignore` に入れています。
+- Tamarin は公式リリースの Homebrew bottle (Linux 用) を使い、`patchelf` で Debian のローダを使うように書き換えています。
+  x86_64 / arm64 はビルド時に自動判別します。
+- Maude は Debian trixie の apt パッケージ (3.4) を使っています。
+- Tamarin のバージョンは `Dockerfile` の `TAMARIN_VERSION` で変更できます。
+- `tamarin_toy_protocol/` は各自で clone するものなので `.gitignore` に入れています。
